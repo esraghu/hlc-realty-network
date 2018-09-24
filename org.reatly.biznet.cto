@@ -1,0 +1,56 @@
+namespace org.realty.biznet
+
+participant Builder identified by email {
+	o String email
+	o String name
+}
+
+participant Agent identified by email {
+	o String email
+	o String name
+	o ServiceType service
+}
+
+participant Regulator identified by email {
+	o String email
+	o String name
+	o String city
+}
+
+asset Project identified by id {
+	o String id
+	o String name
+	--> Builder builder
+	o ServiceType service
+	o ServiceStatus status
+	o String agentName
+
+}
+
+enum ServiceType {
+	o SoilTesting
+	o ElectricalInspection
+}
+
+enum ServiceStatus {
+	o Initiated
+	o Acknowledged
+	o InProgress
+	o PendingApproval
+	o Deferred
+	o Approved
+	o Rejected
+}
+
+abstract concept Service {
+	o ServiceType service
+	o ServiceStatus service
+	--> Agent agent
+}
+
+transaction ServiceUpdate {
+	o ServiceType service
+	o ServiceStatus status
+	--> Project project
+	--> Agent agent
+}
