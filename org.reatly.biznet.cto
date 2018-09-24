@@ -44,7 +44,7 @@ enum ServiceStatus {
 
 abstract concept Service {
 	o ServiceType service
-	o ServiceStatus service
+	o ServiceStatus status
 	--> Agent agent
 }
 
