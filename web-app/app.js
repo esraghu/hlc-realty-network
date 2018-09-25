@@ -87,6 +87,68 @@ app.post('/api/registerBuilder', (req, res) => {
     });
 });
 
+//post call to register agent on the network
+app.post('/api/registerAgent', (req, res) => {
+
+  //declare variables to retrieve from request
+  var email = req.body.email;
+  var name = req.body.name;
+  var service = req.body.service;
+
+  //print variables
+  console.log('Using param - email: ' + email + ' name: ' + name + ' cardId: ' + cardId);
+
+  //validate agent registration fields
+  validate.validateAgentRegistration(cardId, email, name, service)
+    .then((response) => {
+      //return error if error in response
+      if (response.error != null) {
+        res.json({
+          error: response.error
+        });
+        return;
+      } else {
+        //else register builder on the network
+        network.registerAgent(cardId, email, name, service)
+          .then((response) => {
+            //return error if error in response
+            if (response.error != null) {
+              res.json({
+                error: response.error
+              });
+            } else {
+              //else return success
+              res.json({
+                success: response
+              });
+            }
+          });
+      }
+    });
+});
+
+//post call to create project on the network
+app.post('/api/createProject', (req, res) => {
+
+  //declare variables to retrieve from request
+  var projectId = req.body.projectId;
+  var name = req.body.name;
+  var builderEmail = req.body.email;
+
+  //print variables
+  console.log('Using param - project name: ' + name + ' projectId: ' + projectId + 'builderEmail' + builderEmail + ' cardId: ' + cardId);
+
+  network.createProject(cardId, projectId, name, builderEmail)
+    .then((response) => {
+      //return error if error in response
+      if (response.error != null) {
+        res.json({ error: response.console.error;});
+      } else {
+        res.json({ success: response });
+      }
+    })
+});
+
 // post call to initiate a service
 app.post('/api/initiateService', (req, res) => {
 	var cardId = req.body.cardid;
