@@ -59,6 +59,17 @@ async function useIdentity(cardName) {
     await businessNetworkConnection.connect(cardName);
 }
 
+// function to generate a random unique id
+function uuid() {
+    var uuid = "", i, random;
+    for (i = 0; i < 32; i++) {
+        random = Math.random() * 16 | 0;
+        if (i == 8 || i == 12 || i == 16 || i == 20) { uuid += "-" };
+        uuid += (i == 12 ? 4 : (i == 16 ? (random & 3 | 8) : random)).toString(16);
+    }
+    return uuid;
+}
+
 // export modules
 module.exports = {
 
@@ -157,7 +168,7 @@ module.exports = {
      * @param {String} name
      * @param {String} service
      */
-    createProject: async (cardId, id, name, builderEmail) => {
+    createProject: async (cardId, name, builderEmail) => {
         try {
             // connect as admin
             businessNetworkConnection = new BusinessNetworkConnection();
@@ -167,8 +178,9 @@ module.exports = {
             factory = businessNetworkConnection.getBusinessNetwork().getFactory();
 
             // create project
-            const project = factory.newResource(namespace, 'Project', id);
-            project.id = id;
+            let projectId = uuid();
+            const project = factory.newResource(namespace, 'Project', projectId);
+            project.id = projectId;
             project.name = name;
             project.builder = factory.newRelationship(namespace, 'Builder', builderEmail);
             project.service = '';

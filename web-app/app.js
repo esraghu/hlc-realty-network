@@ -142,7 +142,7 @@ app.post('/api/createProject', (req, res) => {
     .then((response) => {
       //return error if error in response
       if (response.error != null) {
-        res.json({ error: response.console.error;});
+        res.json({ error: response.console.error});
       } else {
         res.json({ success: response });
       }
