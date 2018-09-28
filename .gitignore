@@ -1,0 +1,10 @@
+node_modules
+npm-debug.log
+.npm
+
+.git
+
+composer-logs
+
+*.bna
+*.card
