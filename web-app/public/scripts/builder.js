@@ -2,10 +2,10 @@ var apiUrl = location.protocol + '//' + location.host + "/api/";
 
 //check user input and call server
 $('.sign-in-builder').click(function() {
-  updateBuilder();
+  getBuilder();
 });
 
-function updateBuilder() {
+function getBuilder() {
 
   //get user input data
   var formEmail = $('.email input').val();
@@ -17,7 +17,7 @@ function updateBuilder() {
 
   //make ajax call
   $.ajax({
-    type: 'POST',
+    type: 'GET',
     url: apiUrl + 'builderData',
     data: inputData,
     dataType: 'json',
@@ -44,10 +44,18 @@ function updateBuilder() {
           return str;
         });
 
+        $('.display-projects').html(() => {
+          var projects = data.projectList;
+          let str = '<h3><b> + Projects + </b></h3>'
+          projects.forEach(project => {
+            str = str + '<li>' + project + '</li>'
+          });
+        })
+
         //update partners dropdown for earn points transaction
         $('.create-project select').html(() => {
           var str = '<option value="" disabled="" selected="">select</option>';
-          var partnersData = data.partnersData;
+          var projects = data.projectsList;
           for (var i = 0; i < partnersData.length; i++) {
             str = str + '<option partner-id=' + partnersData[i].id + '> ' + partnersData[i].name + '</option>';
           }
@@ -64,13 +72,13 @@ function updateBuilder() {
           return str;
         });
 
-        //update earn points transaction
-        $('.points-allocated-transactions').html(function() {
+        //update create project transaction
+        $('.create-project-transactions').html(() => {
           var str = '';
-          var transactionData = data.earnPointsResult;
+          var transactionData = data.createProjectResult;
 
           for (var i = 0; i < transactionData.length; i++) {
-            str = str + '<p>timeStamp: ' + transactionData[i].timestamp + '<br />partner: ' + transactionData[i].partner + '<br />member: ' + transactionData[i].member + '<br />points: ' + transactionData[i].points + '<br />transactionName: ' + transactionData[i].$class + '<br />transactionID: ' + transactionData[i].transactionId + '</p><br>';
+            str = str + '<p>timeStamp: ' + transactionData[i].timestamp + '<br />name: ' + transactionData[i].projectName + '<br />email: ' + transactionData[i].builderEmail + '<br />points: ' + transactionData[i].points + '<br />transactionName: ' + transactionData[i].$class + '<br />transactionID: ' + transactionData[i].transactionId + '</p><br>';
           }
           return str;
         });

@@ -127,6 +127,20 @@ app.post('/api/registerAgent', (req, res) => {
     });
 });
 
+// get call for the builder to sign-in and fetch their projects list
+app.get('/api/builderData', (req, res) => {
+  var builderEmail = req.body.email;
+  var cardId = req.body.cardId;
+
+  network.getBuilderData(cardId, builderEmail)
+    .then((response) => {
+      response.error != null
+        ? res.json({ error: response.console.error })
+        : res.json({ success: response });
+    })
+
+})
+
 //post call to create project on the network
 app.post('/api/createProject', (req, res) => {
 

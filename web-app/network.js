@@ -12,7 +12,7 @@ const cardStore = require('composer-common').NetworkCardStoreManager.getCardStor
 let adminConnection;
 
 // business network connection for the tests to use
-let businessNetworkConnection;
+let bNC;
 
 let businessNetworkName = 'reatly-network';
 let factory;
@@ -52,11 +52,11 @@ async function importCardForIdentity(cardName, identity) {
 async function useIdentity(cardName) {
 
     //disconnect existing connection
-    await businessNetworkConnection.disconnect();
+    await bNC.disconnect();
 
     //connect to network using cardName
-    businessNetworkConnection = new BusinessNetworkConnection();
-    await businessNetworkConnection.connect(cardName);
+    bNC = new BusinessNetworkConnection();
+    await bNC.connect(cardName);
 }
 
 // function to generate a random unique id
@@ -82,11 +82,11 @@ module.exports = {
     registerBuilder: async (cardId, email, name) => {
         try {
             // connect as admin
-            businessNetworkConnection = new BusinessNetworkConnection();
-            await businessNetworkConnection.connect('admin@realty-network');
+            bNC = new BusinessNetworkConnection();
+            await bNC.connect('admin@realty-network');
 
             // get factory for the business network
-            factory = businessNetworkConnection.getBusinessNetwork().getFactory();
+            factory = bNC.getBusinessNetwork().getFactory();
 
             // create builder
             const builder = factory.newResource(namespace, 'Builder', email);
@@ -94,17 +94,17 @@ module.exports = {
             builder.name = name;
 
             // add builder
-            const participantRegistry = await businessNetworkConnection.getParticipantRegistry(namespace + '.Builder');
+            const participantRegistry = await bNC.getParticipantRegistry(namespace + '.Builder');
             await participantRegistry.add(builder);
 
             // issue identity
-            const identity = await businessNetworkConnection.issueIdentity(namespace + '.Builder#' + email, cardId);
+            const identity = await bNC.issueIdentity(namespace + '.Builder#' + email, cardId);
 
             // import card for identity
             await importCardForIdentity(cardId, identity);
 
             // disconnect
-            await businessNetworkConnection.disconnect('admin@reatly-network');
+            await bNC.disconnect('admin@reatly-network');
 
             return true;
         }
@@ -126,11 +126,11 @@ module.exports = {
     registerAgent: async (cardId, email, name, service) => {
         try {
             // connect as admin
-            businessNetworkConnection = new BusinessNetworkConnection();
-            await businessNetworkConnection.connect('admin@realty-network');
+            bNC = new BusinessNetworkConnection();
+            await bNC.connect('admin@realty-network');
 
             // get factory for the business network
-            factory = businessNetworkConnection.getBusinessNetwork().getFactory();
+            factory = bNC.getBusinessNetwork().getFactory();
 
             // create agent
             const agent = factory.newResource(namespace, 'Agent', email);
@@ -139,19 +139,61 @@ module.exports = {
             agent.service = service;
 
             // add agent
-            const participantRegistry = await businessNetworkConnection.getParticipantRegistry(namespace + '.Agent');
+            const participantRegistry = await bNC.getParticipantRegistry(namespace + '.Agent');
             await participantRegistry.add(agent);
 
             // issue identity
-            const identity = await businessNetworkConnection.issueIdentity(namespace + '.Agent#' + email, cardId);
+            const identity = await bNC.issueIdentity(namespace + '.Agent#' + email, cardId);
 
             // import card for identity
             await importCardForIdentity(cardId, identity);
 
             // disconnect
-            await businessNetworkConnection.disconnect('admin@reatly-network');
+            await bNC.disconnect('admin@reatly-network');
 
             return true;
+        }
+        catch(err) {
+            console.log(err);
+            var error = {};
+            error.error = err.message;
+            return error;
+        }
+    },
+
+    /**
+     * Fetch the builder's data from the registry
+     * @param {String} cardId
+     * @param {String} email
+     */
+    getBuilderData: async (cardId, email) => {
+        try {
+            // connect to the business network
+            bNC = new BusinessNetworkConnection();
+            await bNC.connect(cardId);
+
+            // get the builder's details
+            const builder = await bNC.getParticipantRegistry(namespace + '.Builder');
+            await builder.get(email);
+
+            /* get the project details that are linked to this builder.
+             * easiest way I can think of is to fetch all the projects and then select only those that are 
+             * linked to this builder.
+             */
+            const projectList = await bNC.getAssetRegistry(namespace + '.Project');
+            await projectList.getAll();
+            let projects = [];
+            projectList.forEach(project => {
+                if (project.builder.email == email) {
+                    projects.append(project);
+                }
+            });
+            let response = {
+                email: builder.email,
+                name: builder.name,
+                projectList: projects
+            }
+            return response;
         }
         catch(err) {
             console.log(err);
@@ -171,11 +213,11 @@ module.exports = {
     createProject: async (cardId, name, builderEmail) => {
         try {
             // connect as admin
-            businessNetworkConnection = new BusinessNetworkConnection();
-            await businessNetworkConnection.connect('admin@realty-network');
+            bNC = new BusinessNetworkConnection();
+            await bNC.connect('admin@realty-network');
 
             // get factory for the business network
-            factory = businessNetworkConnection.getBusinessNetwork().getFactory();
+            factory = bNC.getBusinessNetwork().getFactory();
 
             // create project
             let projectId = uuid();
@@ -188,11 +230,11 @@ module.exports = {
             project.agentName = '';
 
             // add project to registry
-            const assetRegistry = await businessNetworkConnection.getAssetRegistry(namespace + '.Project');
+            const assetRegistry = await bNC.getAssetRegistry(namespace + '.Project');
             await assetRegistry.add(agent);
 
             // disconnect
-            await businessNetworkConnection.disconnect('admin@reatly-network');
+            await bNC.disconnect('admin@reatly-network');
 
             return true;
         }
@@ -215,11 +257,11 @@ module.exports = {
     initiateService: async (cardId, serviceType, status, projectId, agentEmail) => {
       try {
         //connect to network with cardId
-        businessNetworkConnection = new BusinessNetworkConnection();
-        await businessNetworkConnection.connect(cardId);
+        bNC = new BusinessNetworkConnection();
+        await bNC.connect(cardId);
 
         //get the factory for the business network.
-        factory = businessNetworkConnection.getBusinessNetwork().getFactory();
+        factory = bNC.getBusinessNetwork().getFactory();
 
         //create transaction
         const serviceReq = factory.newTransaction(namespace, 'ServiceUpdate');
@@ -229,10 +271,10 @@ module.exports = {
         serviceReq.agent = factory.newRelationship(namespace, 'Agent', agentEmail);
 
         //submit transaction
-        await businessNetworkConnection.submitTransaction(serviceReq);
+        await bNC.submitTransaction(serviceReq);
 
         //disconnect
-        await businessNetworkConnection.disconnect(cardId);
+        await bNC.disconnect(cardId);
         return true;
 
       } catch (err) {
