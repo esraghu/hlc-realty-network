@@ -11,7 +11,8 @@ const app = express();
 const router = express.Router();
 
 // get libraries here
-const network = require('./network');
+const network = require('./network.js');
+const validate = require('./validate.js');
 
 //bootstrap application settings
 app.use(express.static('./public'));
@@ -19,7 +20,7 @@ app.use('/scripts', express.static(path.join(__dirname, '/public/scripts')));
 app.use(bodyParser.json());
 
 //get home page
-app.get('/home', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
@@ -54,6 +55,7 @@ app.post('/api/registerBuilder', (req, res) => {
   //declare variables to retrieve from request
   var email = req.body.email;
   var name = req.body.name;
+  var cardId = req.body.cardId;
 
   //print variables
   console.log('Using param - email: ' + email + ' name: ' + name + ' cardId: ' + cardId);
@@ -205,4 +207,15 @@ app.post('/api/udpateService', (req, res) => {
 				});
 			}
 		});
+});
+
+//declare port
+var port = process.env.PORT || 8000;
+if (process.env.VCAP_APPLICATION) {
+  port = process.env.PORT;
+}
+
+//run app on port
+app.listen(port, function() {
+  console.log('app running on port: %d', port);
 });

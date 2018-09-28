@@ -4,10 +4,11 @@ console.log('at register.js');
 
 // check user input and call server to register builder
 $('.register-builder').click( () => {
-    var email = $('.email input').val();
+    var email = $('.email-id input').val();
+    var cardId = $('.card-id input').val();
     var name = $('.name input').val();
 
-    var inputData = '{' + '"email" :' + email + '", ' + '"name" :' + name + '}';
+    var inputData = '{' + '"email" :"' + email + '", ' + '"name" :"' + name + '", "cardId" : "' + cardId + '"}';
     console.log(inputData);
 
     // ajax call to add into database

@@ -122,7 +122,8 @@ cat << EOF > DevServer_connection.json
     },
     "peers": {
         "peer0.org1.example.com": {
-            "url": "grpc://${HOST}:7051"
+            "url": "grpc://${HOST}:7051",
+            "eventUrl": "grpc://${HOST}:7053"
         }
     },
     "certificateAuthorities": {
