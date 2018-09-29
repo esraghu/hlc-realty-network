@@ -61,7 +61,7 @@ app.post('/api/registerBuilder', (req, res) => {
   console.log('Using param - email: ' + email + ' name: ' + name + ' cardId: ' + cardId);
 
   //validate builder registration fields
-  validate.validateBuilderRegistration(cardId, email, name)
+  validate.validateBuilderRegistration(email, name)
     .then((response) => {
       //return error if error in response
       if (response.error != null) {
