@@ -130,9 +130,10 @@ app.post('/api/registerAgent', (req, res) => {
 });
 
 // get call for the builder to sign-in and fetch their projects list
-app.get('/api/builderData', (req, res) => {
+app.post('/api/builderData', (req, res) => {
   var builderEmail = req.body.email;
-  var cardId = req.body.cardId;
+  var cardId = req.body.cardid;
+  console.log(`request body is ${req.body} and email is ${builderEmail} and card-id is ${cardId}`);
 
   network.getBuilderData(cardId, builderEmail)
     .then((response) => {

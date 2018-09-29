@@ -183,7 +183,8 @@ module.exports = {
             const projectList = await bNC.getAssetRegistry(namespace + '.Project');
             await projectList.getAll();
             let projects = [];
-            projectList.forEach(project => {
+            console.log(`projects are ${projects}`)
+            projects.forEach(project => {
                 if (project.builder.email == email) {
                     projects.append(project);
                 }
@@ -191,8 +192,9 @@ module.exports = {
             let response = {
                 email: builder.email,
                 name: builder.name,
-                projectList: projects
+                //projectList: projects
             }
+            console.log(`response data for ${builder} is: ${builder.email} and ${builder.name}`);
             return response;
         }
         catch(err) {
