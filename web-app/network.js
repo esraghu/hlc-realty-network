@@ -173,29 +173,30 @@ module.exports = {
             await bNC.connect(cardId);
 
             // get the builder's details
-            const builder = await bNC.getParticipantRegistry(namespace + '.Builder');
-            await builder.get(email);
+            const builderRegistry = await bNC.getParticipantRegistry(namespace + '.Builder');
+            const builder = await builderRegistry.get(email);
 
             /* get the project details that are linked to this builder.
              * easiest way I can think of is to fetch all the projects and then select only those that are 
              * linked to this builder.
              */
-            const projectList = await bNC.getAssetRegistry(namespace + '.Project');
-            await projectList.getAll();
+            const projectRegistry = await bNC.getAssetRegistry(namespace + '.Project');
+            const projectList = await projectRegistry.getAll();
+            console.log(`The current projects are: ${JSON.stringify(projectList)}`);
             let projects = [];
             console.log(`projects are ${projects}`)
-            projects.forEach(project => {
+            projectList.forEach(project => {
                 if (project.builder.email == email) {
                     projects.append(project);
                 }
             });
-            let response = {
-                email: builder.email,
-                name: builder.name,
-                //projectList: projects
-            }
-            console.log(`response data for ${builder} is: ${builder.email} and ${builder.name}`);
-            return response;
+            // let response = {
+            //     email: builder.email,
+            //     name: builder.name,
+            //     //projectList: projects
+            // }
+            // console.log(`response data for ${builder} is: ${builder.email} and ${builder.name}`);
+            return builder;
         }
         catch(err) {
             console.log(err);
@@ -212,7 +213,7 @@ module.exports = {
      * @param {String} name
      * @param {String} service
      */
-    createProject: async (cardId, name, builderEmail) => {
+    createProject: async (name, builderEmail) => {
         try {
             // connect as admin
             bNC = new BusinessNetworkConnection();
@@ -233,10 +234,10 @@ module.exports = {
 
             // add project to registry
             const assetRegistry = await bNC.getAssetRegistry(namespace + '.Project');
-            await assetRegistry.add(agent);
+            await assetRegistry.add(project);
 
             // disconnect
-            await bNC.disconnect('admin@reatly-network');
+            await bNC.disconnect('admin@realty-network');
 
             return true;
         }

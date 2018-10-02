@@ -138,14 +138,20 @@ app.post('/api/builderData', (req, res) => {
   var builderEmail = req.body.email;
   var cardId = req.body.cardid;
   console.log(`request body is ${req.body} and email is ${builderEmail} and card-id is ${cardId}`);
+  let returnData = {};
 
   network.getBuilderData(cardId, builderEmail)
-    .then((response) => {
-      response.error != null
-        ? res.json({ error: response.console.error })
-        : res.json({ success: response });
+    .then((builder) => {
+      if (builder.error != null) {
+        res.json({ error: builder.error });
+      } else {
+          returnData.email = builder.email;
+          returnData.name = builder.name;
+          returnData.cardId = cardId;
+          console.log(`The returnData is ${returnData.email} and ${returnData.name}`);
+          res.json(returnData);
+      }
     })
-
 })
 
 //post call to create project on the network
@@ -154,12 +160,12 @@ app.post('/api/createProject', (req, res) => {
   //declare variables to retrieve from request
   var projectId = req.body.projectId;
   var name = req.body.name;
-  var builderEmail = req.body.email;
-
+  var builderEmail = req.body.email;  
+  var cardId = req.body.cardId;
   //print variables
   console.log('Using param - project name: ' + name + ' projectId: ' + projectId + 'builderEmail' + builderEmail + ' cardId: ' + cardId);
 
-  network.createProject(cardId, projectId, name, builderEmail)
+  network.createProject(projectId, name, builderEmail)
     .then((response) => {
       //return error if error in response
       if (response.error != null) {

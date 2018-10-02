@@ -1,15 +1,42 @@
 var apiUrl = location.protocol + '//' + location.host + "/api/";
+let formCardId = '';
+let formEmail = '';
+
 
 //check user input and call server
 $('.sign-in-builder').click(function() {
   getBuilder();
 });
 
+//create project
+$('.create-project').click(() => {
+  let projectName = $('.newProject input').val();
+  //console.log('builder email is ${builderEmail}');
+  let projectData = `{"name" : "${projectName}", "builderEmail" : "${formEmail}", "cardId" : "${formCardId}"}`;
+  $.ajax(({
+    type: 'POST',
+    url: apiUrl + 'createProject',
+    data: projectData,
+    dataType: 'json',
+    contentType: 'application/json',
+    beforeSend: () => {
+      document.getElementById('loader').style.display = "block";
+    },
+    success: (data) => {
+        document.getElementById('loader').style.display = "none";
+        alert(`Project ${projectName} created successfully`);
+      },
+    error: (jqXHR, textStatus, errorThrown) => {
+        alert(`Error creating the project`);
+      }
+  }));
+});
+
 function getBuilder() {
 
   //get user input data
-  var formEmail = $('.email input').val();
-  var formCardId = $('.card-id input').val();
+  formEmail = $('.email input').val();
+  formCardId = $('.card-id input').val();
 
   //create json data
   var inputData = '{' + '"email" : "' + formEmail + '", ' + '"cardid" : "' + formCardId + '"}';
@@ -50,7 +77,31 @@ function getBuilder() {
           projects.forEach(project => {
             str = str + '<li>' + project + '</li>'
           });
-        })
+        });
+        
+        //create projects
+        $('.create-project select').html(() => {
+          console.log('inside create project now');
+          let projectName = $('.newProject input').val();
+          let projectData = `{"name" : "${projectName}", "builderEmail" : "${data.email}", "cardId" : "${data.cardId}"}`;
+          $.ajax(({
+            type: 'POST',
+            url: apiUrl + 'createProject',
+            data: projectData,
+            dataType: 'json',
+            contentType: 'application/json',
+            beforeSend: () => {
+              $('loader').style.display = "block";
+            },
+            success: (data) => {
+              $('loader').style.display = "none";
+              alert(`Project ${projectName} created successfully`);
+            },
+            error: (jqXHR, textStatus, errorThrown) => {
+              alert(`Error creating the project`);
+            }
+          }))
+        });
 
         // //update partners dropdown for earn points transaction
         // $('.create-project select').html(() => {

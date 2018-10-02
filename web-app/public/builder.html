@@ -13,7 +13,7 @@
 <body class="bg-light">
 
   <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-    <a class="navbar-brand" href="/home">Customer Loyalty Program</a>
+    <a class="navbar-brand" href="/home">Real Estate Network</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -31,8 +31,8 @@
         <li class="nav-item text-nowrap dropdown">
           <a class="nav-link dropdown-toggle " href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sign-in</a>
           <div class="dropdown-menu" aria-labelledby="dropdown01">
-            <a class="dropdown-item" href="/member">Member</a>
-            <a class="dropdown-item" href="/partner">Partner</a>
+            <a class="dropdown-item" href="/member">Builder</a>
+            <a class="dropdown-item" href="/partner">Agent</a>
           </div>
         </li>
 
@@ -69,8 +69,8 @@
           <tr>
             <td>
               <div style="padding-right: 20px">
-                <h2>name:</h2>
-                <h2>points:</h2>
+                <h2>Builder Name: <p id="builderName"></p> </h2>
+                <h2>Builder Email:<p id="builderEmail"></p></h2>
               </div>
             </td>
             <td>
@@ -85,7 +85,7 @@
     <div class="container" id="infoSection">
 
       <div class="text-center">
-        <h5 class="text-center">Earn points through purchases, redeem points on deals and view your transactions</h5>
+        <h5 class="text-center">Create new Project, Check status of your existing Projects, Create new Service request</h5>
         <br>
       </div>
 
@@ -94,26 +94,26 @@
 
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item tab-width">
-            <a class="nav-link active" id="earn-tab" data-toggle="tab" href="#earn" role="tab" aria-controls="earn" aria-selected="true">Earn Points</a>
+            <a class="nav-link active" id="project-list-tab" data-toggle="tab" href="#projectList" role="tab" aria-controls="projectList" aria-selected="true">Current Projects</a>
           </li>
           <li class="nav-item tab-width">
-            <a class="nav-link" id="redeem-tab" data-toggle="tab" href="#redeem" role="tab" aria-controls="redeem" aria-selected="false">Redeem Points</a>
+            <a class="nav-link" id="create-project-tab" data-toggle="tab" href="#createProject" role="tab" aria-controls="createProject" aria-selected="false">New Project</a>
           </li>
           <li class="nav-item tab-width">
-            <a class="nav-link" id="transactions-tab" data-toggle="tab" href="#transactions" role="tab" aria-controls="transactions" aria-selected="false">Transactions</a>
+            <a class="nav-link" id="create-service-tab" data-toggle="tab" href="#createService" role="tab" aria-controls="createService" aria-selected="false">New Service Request</a>
           </li>
         </ul>
       </div>
       <div class="row">
         <div class="tab-content" id="myTabContent">
-          <div class="tab-pane fade show active" id="earn" role="tabpanel" aria-labelledby="earn-tab">
+          <div class="tab-pane fade show active" id="projectList" role="tabpanel" aria-labelledby="project-list-tab">
             <br>
-            <h5> Earn Points through purchases </h5>
+            <h5> Status of Current Projects </h5>
 
             <br>
-            <div class="earnPartnerId">
-              <p> <b>Choose the Partner to purchase from: </b></p>
-              <div class="earn-partner">
+            <div class="projectListId">
+              <p> <b>Choose the project for more details from: </b></p>
+              <div class="select-project">
                 <p>
                   <select class="form-control">
                                         <option disabled="" selected="" value="disabled">Loading...</option>
@@ -146,45 +146,21 @@
 
           </div>
 
-          <div class="tab-pane fade" id="redeem" role="tabpanel" aria-labelledby="redeem-tab">
+          <div class="tab-pane fade" id="createProject" role="tabpanel" aria-labelledby="create-project-tab">
             <br>
-            <h5> Redeem Points on Deals </h5>
-
-            <br>
-            <div class="usePartnerId">
-              <p> <b>Choose the Partner to redeem points from: </b></p>
-              <div class="use-partner">
-                <p>
-                  <select class="form-control">
-                                            <option disabled="" selected="" value="disabled">Loading...</option>
-                                        </select>
-                </p>
-              </div>
-            </div>
+            <h5> Create a new Project </h5>
 
             <br>
-            <p> <b> Loyalty Program Deals </b></p>
-
-            <p>
-              <button class="btn btn-primary use-points-50">Get Item A for 50 points </button> <br />
-              <button class="btn btn-primary use-points-150">Get Item B for 150 points </button> <br />
-              <button class="btn btn-primary use-points-200">Get Item C for 200 points </button> <br />
-            </p>
+            <p><b> Please complete the following details to register a new project </b></p>
 
             <br>
-            <p><b> Get item for specific points </b>
-              <p>
-
-                <div class="usePoints">
-                  <p> Enter points value of specific item
+                <div class="newProject">
+                  <p> Enter name of the new Project
                     <input>
                   </p>
                 </div>
-
-                <button class="btn btn-secondary use-points-transaction">Get item and redeem points</button>
-
+                <button class="btn btn-secondary create-project">Create Project</button>
                 <hr class="featurette-divider">
-
           </div>
 
           <div class="tab-pane fade" id="transactions" role="tabpanel" aria-labelledby="transactions-tab">
