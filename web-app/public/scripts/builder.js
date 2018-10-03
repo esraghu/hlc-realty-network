@@ -12,7 +12,7 @@ $('.sign-in-builder').click(function() {
 $('.create-project').click(() => {
   let projectName = $('.newProject input').val();
   //console.log('builder email is ${builderEmail}');
-  let projectData = `{"name" : "${projectName}", "builderEmail" : "${formEmail}", "cardId" : "${formCardId}"}`;
+  let projectData = `{"name" : "${projectName}", "email" : "${formEmail}", "cardId" : "${formCardId}"}`;
   $.ajax(({
     type: 'POST',
     url: apiUrl + 'createProject',
@@ -24,9 +24,10 @@ $('.create-project').click(() => {
     },
     success: (data) => {
         document.getElementById('loader').style.display = "none";
-        alert(`Project ${projectName} created successfully`);
+        alert(`Project ${projectName} created successfully and id is ${data.id}`);
       },
     error: (jqXHR, textStatus, errorThrown) => {
+        document.getElementById('loader').style.display = "none";
         alert(`Error creating the project`);
       }
   }));

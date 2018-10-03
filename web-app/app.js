@@ -163,15 +163,15 @@ app.post('/api/createProject', (req, res) => {
   var builderEmail = req.body.email;  
   var cardId = req.body.cardId;
   //print variables
-  console.log('Using param - project name: ' + name + ' projectId: ' + projectId + 'builderEmail' + builderEmail + ' cardId: ' + cardId);
+  console.log('Using param - project name: ' + name + 'builderEmail' + builderEmail + ' cardId: ' + cardId);
 
-  network.createProject(projectId, name, builderEmail)
+  network.createProject(name, builderEmail, cardId)
     .then((response) => {
       //return error if error in response
       if (response.error != null) {
         res.json({ error: response.console.error});
       } else {
-        res.json({ success: response });
+        res.json(response);
       }
     })
 });

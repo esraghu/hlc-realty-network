@@ -213,33 +213,37 @@ module.exports = {
      * @param {String} name
      * @param {String} service
      */
-    createProject: async (name, builderEmail) => {
+    createProject: async (name, builderEmail, cardId) => {
         try {
             // connect as admin
             bNC = new BusinessNetworkConnection();
-            await bNC.connect('admin@realty-network');
+            await bNC.connect(cardId);
 
             // get factory for the business network
             factory = bNC.getBusinessNetwork().getFactory();
 
             // create project
             let projectId = uuid();
-            const project = factory.newResource(namespace, 'Project', projectId);
+            let project = factory.newResource(namespace, 'Project', projectId);
             project.id = projectId;
             project.name = name;
             project.builder = factory.newRelationship(namespace, 'Builder', builderEmail);
-            project.service = '';
-            project.status = '';
+            project.service = 'SoilTesting';
+            project.status = 'Initiated';
             project.agentName = '';
 
             // add project to registry
             const assetRegistry = await bNC.getAssetRegistry(namespace + '.Project');
             await assetRegistry.add(project);
+            
+            // let's get the project object and return it
+            const projectRegistry = await bNC.getAssetRegistry(namespace + '.Project');
+            project = projectRegistry.get(projectId);
 
             // disconnect
-            await bNC.disconnect('admin@realty-network');
+            await bNC.disconnect(cardId);
 
-            return true;
+            return project;
         }
         catch(err) {
             console.log(err);
