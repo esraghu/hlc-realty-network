@@ -31,6 +31,16 @@ $('.create-project').click(() => {
         alert(`Error creating the project`);
       }
   }));
+  
+  // let's display the project list
+  $('.display-projects').html(() => {
+    let projects = data.projectList;
+    let str = '';
+    projects.forEach(project => {
+      str = `${str}<li>${project}</li><br>`;
+    });
+    return str;
+  })
 });
 
 function getBuilder() {
@@ -58,6 +68,7 @@ function getBuilder() {
 
       //remove loader
       document.getElementById('loader').style.display = "none";
+      console.log(`Response data received is: ${JSON.stringify(data)}`);
 
       //check data for error
       if (data.error) {
@@ -73,37 +84,19 @@ function getBuilder() {
         });
 
         $('.display-projects').html(() => {
-          var projects = data.projectList;
-          let str = '<h3><b> + Projects + </b></h3>'
-          projects.forEach(project => {
-            str = str + '<li>' + project + '</li>'
-          });
+          console.log(`projects are ${JSON.stringify(data.projects)}`);
+          if (data.projects != null) {
+            let projectList = data.projects;
+            let str = '';
+            projectList.forEach((project) => {
+              str = `${str}<li>${project.id} ${project.name}</li><br>`;
+            })
+            return str;
+          } else {
+            return 'No active projects found!';
+          };
         });
         
-        //create projects
-        $('.create-project select').html(() => {
-          console.log('inside create project now');
-          let projectName = $('.newProject input').val();
-          let projectData = `{"name" : "${projectName}", "builderEmail" : "${data.email}", "cardId" : "${data.cardId}"}`;
-          $.ajax(({
-            type: 'POST',
-            url: apiUrl + 'createProject',
-            data: projectData,
-            dataType: 'json',
-            contentType: 'application/json',
-            beforeSend: () => {
-              $('loader').style.display = "block";
-            },
-            success: (data) => {
-              $('loader').style.display = "none";
-              alert(`Project ${projectName} created successfully`);
-            },
-            error: (jqXHR, textStatus, errorThrown) => {
-              alert(`Error creating the project`);
-            }
-          }))
-        });
-
         // //update partners dropdown for earn points transaction
         // $('.create-project select').html(() => {
         //   var str = '<option value="" disabled="" selected="">select</option>';

@@ -190,13 +190,13 @@ module.exports = {
                     projects.append(project);
                 }
             });
-            // let response = {
-            //     email: builder.email,
-            //     name: builder.name,
-            //     //projectList: projects
-            // }
-            // console.log(`response data for ${builder} is: ${builder.email} and ${builder.name}`);
-            return builder;
+            let response = {
+                email: builder.email,
+                name: builder.name,
+                projects: projectList
+            }
+            console.log(`response data for ${builder} is: ${builder.email} and ${builder.name}`);
+            return response;
         }
         catch(err) {
             console.log(err);

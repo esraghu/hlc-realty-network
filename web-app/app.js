@@ -141,15 +141,12 @@ app.post('/api/builderData', (req, res) => {
   let returnData = {};
 
   network.getBuilderData(cardId, builderEmail)
-    .then((builder) => {
-      if (builder.error != null) {
-        res.json({ error: builder.error });
+    .then((response) => {
+      if (response.error != null) {
+        res.json({ error: response.error });
       } else {
-          returnData.email = builder.email;
-          returnData.name = builder.name;
-          returnData.cardId = cardId;
-          console.log(`The returnData is ${returnData.email} and ${returnData.name}`);
-          res.json(returnData);
+          console.log(`The returnData is ${JSON.stringify(response)}`);
+          res.json(response);
       }
     })
 })
