@@ -36,8 +36,8 @@ $('.create-project').click(() => {
   $('.display-projects').html(() => {
     let projects = data.projectList;
     let str = '';
-    projects.forEach(project => {
-      str = `${str}<li>${project}</li><br>`;
+    projects.forEach((project) => {
+      str = `${str}<li>${project.id} ${project.name}</li><br>`;
     });
     return str;
   })
